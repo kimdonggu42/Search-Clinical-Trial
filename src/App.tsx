@@ -1,11 +1,11 @@
 import React from 'react';
-import Main from './pages/Main';
+import SearchBox from './components/SearchBox';
 
 function App() {
   return (
-    <div>
-      <Main />
-    </div>
+    <>
+      <SearchBox />
+    </>
   );
 }
 

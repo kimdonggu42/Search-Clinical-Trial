@@ -1,12 +1,22 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useState } from 'react';
 import SearchBar from './SearchBar';
 
 export default function SearchBox() {
+  const [spread, setSpread] = useState<boolean>(false);
+
+  const spreacBoxClose = () => {
+    setSpread(false);
+  };
+
   return (
-    <Container>
-      <TitleStyle>{'국내 모든 임상시험 검색하고\n온라인으로 참여하기'}</TitleStyle>
-      <SearchBar />
+    <Container onClick={spreacBoxClose}>
+      <TitleStyle>
+        <div>국내 모든 임상시험 검색하고</div>
+        <div>온라인으로 참여하기</div>
+      </TitleStyle>
+      <SearchBar spread={spread} setSpread={setSpread} />
     </Container>
   );
 }
@@ -27,6 +37,5 @@ const TitleStyle = styled.h1`
   font-size: 2.2rem;
   text-align: center;
   line-height: 1.6;
-  white-space: pre-line;
   font-weight: 800;
 `;

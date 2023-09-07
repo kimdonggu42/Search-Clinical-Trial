@@ -1,16 +1,80 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useState, useEffect, useRef } from 'react';
 import { ReactComponent as SearchIcon } from '../assets/images/search.svg';
 import searchIcon from '../assets/images/search.svg';
+import SearchList from './SearchList';
+import { useGetQuery } from '../hooks/useGetQuery';
+import { useDebounce } from '../hooks/useDebounce';
+import { Trial } from '../hooks/useGetQuery';
+import { SearchBoxProps } from '../utils/type';
 
-export default function SearchBar() {
+export default function SearchBar({ spread, setSpread }: SearchBoxProps) {
+  const [currentSearchTerm, setCurrentSearchTerm] = useState<string>('');
+  const [recentSearchTerms, setRecentSearchTerms] = useState<Trial[]>([]);
+  const [recommendedSearchTerms, setRecommendedSearchTerms] = useState<Trial[]>([]);
+
+  const listRef = useRef<HTMLUListElement>(null);
+  const debouncedWord = useDebounce(currentSearchTerm, 500);
+  const { getQuery } = useGetQuery();
+
+  useEffect(() => {
+    const search = async () => {
+      const res = await getQuery(debouncedWord);
+      setRecommendedSearchTerms(res);
+    };
+    search();
+  }, [debouncedWord]);
+
+  const savePreWord = (word: string = currentSearchTerm) =>
+    !recentSearchTerms.some(preWord => preWord.sickNm === word) &&
+    setRecentSearchTerms(pre => [...pre, { sickNm: word }]);
+
+  const searchKeyWord = (word: string) => {
+    setCurrentSearchTerm(word);
+  };
+
+  const moveToSpread = (e: React.KeyboardEvent) => {
+    setSpread(true);
+    if (e.key === 'ArrowDown') {
+      if (listRef?.current) {
+        listRef.current.focus();
+      }
+    } else if (e.key === 'Escape') {
+      setSpread(false);
+    }
+  };
+
+  const searchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCurrentSearchTerm(e.target.value);
+  };
+
+  const spreadBoxOpen = () => {
+    setSpread(true);
+  };
+
   return (
-    <Container>
-      <SearchInput placeholder="질환명을 입력해 주세요." />
-      <SearchButton>
+    <Container onClick={e => e.stopPropagation()}>
+      <SearchInput
+        value={currentSearchTerm}
+        placeholder="질환명을 입력해 주세요."
+        onClick={spreadBoxOpen}
+        onChange={searchInputChange}
+        onKeyUp={e => e.key === 'Enter' && savePreWord()}
+        onKeyDown={moveToSpread}
+      />
+      <SearchButton onClick={() => savePreWord()}>
         <span>검색버튼</span>
         <SearchIcon />
       </SearchButton>
+      <SearchList
+        spread={spread}
+        listRef={listRef}
+        currentSearchTerm={currentSearchTerm}
+        recentSearchTerms={recentSearchTerms}
+        recommendedSearchTerms={recommendedSearchTerms}
+        searchKeyWord={searchKeyWord}
+      />
     </Container>
   );
 }
