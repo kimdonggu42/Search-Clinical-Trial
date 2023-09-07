@@ -6,13 +6,13 @@ import searchIcon from '../assets/images/search.svg';
 import SearchList from './SearchList';
 import { useGetQuery } from '../hooks/useGetQuery';
 import { useDebounce } from '../hooks/useDebounce';
-import { Trial } from '../hooks/useGetQuery';
+import { SickData } from '../utils/type';
 import { SearchBoxProps } from '../utils/type';
 
 export default function SearchBar({ spread, setSpread }: SearchBoxProps) {
   const [currentSearchTerm, setCurrentSearchTerm] = useState<string>('');
-  const [recentSearchTerms, setRecentSearchTerms] = useState<Trial[]>([]);
-  const [recommendedSearchTerms, setRecommendedSearchTerms] = useState<Trial[]>([]);
+  const [recentSearchTerms, setRecentSearchTerms] = useState<SickData[]>([]);
+  const [recommendedSearchTerms, setRecommendedSearchTerms] = useState<SickData[]>([]);
 
   const listRef = useRef<HTMLUListElement>(null);
   const debouncedWord = useDebounce(currentSearchTerm, 500);

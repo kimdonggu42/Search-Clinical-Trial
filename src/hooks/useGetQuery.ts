@@ -1,18 +1,6 @@
 import { BASE_API } from '../utils/api';
-
-export interface Trial {
-  sickCd?: string;
-  sickNm: string;
-}
-
-interface Caching {
-  date: Date;
-  data: Trial[];
-}
-
-interface History {
-  [key: string]: Caching;
-}
+import { CachingData } from '../utils/type';
+import { History } from '../utils/type';
 
 export const useGetQuery = () => {
   const reqHistory: History = {};
@@ -22,7 +10,7 @@ export const useGetQuery = () => {
       return [];
     }
 
-    let cached: Caching = reqHistory[word];
+    let cached: CachingData = reqHistory[word];
 
     if (!cached || Number(new Date()) - Number(cached.date) > 5 * 60 * 1000) {
       try {
