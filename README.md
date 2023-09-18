@@ -62,8 +62,6 @@ $ npm start
 
 - useDebounce hook에서 value와 delay를 인자로 받아 설정한 delay 전에는 API 호출이 발생하지 않도록 했습니다.
 
-- useDebounce hook에서 value와 delay를 인자로 받아 설정한 delay 전에는 API 호출이 발생하지 않도록 했습니다.
-
 ### 3. 키보드로 검색어 이동 기능 구현
 
 - 방향 키를 사용해 이동할 요소 검색어 ul에 ref 할당하고 검색창에서 아래 방향 키를 누르면 ref에 포커스 이벤트를 실행하여 검색어 ul로 이동되도록 했습니다.
